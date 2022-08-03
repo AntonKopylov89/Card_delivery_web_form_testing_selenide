@@ -1,0 +1,1 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/xcmwt5gfrac4pqv4?svg=true)](https://ci.appveyor.com/project/AntonKopylov89/selenidecarddeliveryformtesting)
