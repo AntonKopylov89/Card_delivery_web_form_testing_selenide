@@ -1,5 +1,6 @@
 package ru.netology.service;
 
+import com.codeborne.selenide.Condition;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,24 +10,14 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import static com.codeborne.selenide.Condition.exactText;
-import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 import static org.openqa.selenium.Keys.BACK_SPACE;
 
 public class CardDeliveryTest {
 
-    public void setDaysPlusToday(int daysPlusToday) {
-        this.daysPlusToday = daysPlusToday;
-    }
-
-    private int daysPlusToday;
-
-    public String setDateOfDelivery() {
-        LocalDate today = LocalDate.now();
-        LocalDate date = today.plusDays(daysPlusToday);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.YYYY");
-        return formatter.format(date);
+    public String generateDate(int days) {
+        return LocalDate.now().plusDays(days).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
     }
 
     @BeforeEach
@@ -37,11 +28,11 @@ public class CardDeliveryTest {
 
     @Test
     void shouldSubmitRequest() {
-        setDaysPlusToday(5);
+        String planningDate = generateDate(5);
         $("[data-test-id=city] input").setValue("Москва");
         $("[data-test-id=date] input").sendKeys(Keys.CONTROL + "A");
         $("[data-test-id=date] input").sendKeys(BACK_SPACE);
-        $("[data-test-id=date] input").setValue(String.valueOf(setDateOfDelivery()));
+        $("[data-test-id=date] input").setValue(String.valueOf(planningDate));
         $("[data-test-id=name] input").setValue("Салтыков-Щедрин Евгений");
         $("[data-test-id=phone] input").setValue("+79578664311");
         $("[data-test-id=agreement]").click();
@@ -51,11 +42,11 @@ public class CardDeliveryTest {
 
     @Test
     void shouldCityError() {
-        setDaysPlusToday(5);
+        String planningDate = generateDate(5);
         $("[data-test-id=city] input").setValue("Сызрань");
         $("[data-test-id=date] input").sendKeys(Keys.CONTROL + "A");
         $("[data-test-id=date] input").sendKeys(BACK_SPACE);
-        $("[data-test-id=date] input").setValue(String.valueOf(setDateOfDelivery()));
+        $("[data-test-id=date] input").setValue(String.valueOf(planningDate));
         $("[data-test-id=name] input").setValue("Салтыков-Щедрин Евгений");
         $("[data-test-id=phone] input").setValue("+79578664311");
         $("[data-test-id=agreement]").click();
@@ -65,11 +56,11 @@ public class CardDeliveryTest {
 
     @Test
     void shouldDeliveryDateError() {
-        setDaysPlusToday(1);
+        String planningDate = generateDate(1);
         $("[data-test-id=city] input").setValue("Москва");
         $("[data-test-id=date] input").sendKeys(Keys.CONTROL + "A");
         $("[data-test-id=date] input").sendKeys(BACK_SPACE);
-        $("[data-test-id=date] input").setValue(String.valueOf(setDateOfDelivery()));
+        $("[data-test-id=date] input").setValue(String.valueOf(planningDate));
         $("[data-test-id=name] input").setValue("Салтыков-Щедрин Евгений");
         $("[data-test-id=phone] input").setValue("+79578664311");
         $("[data-test-id=agreement]").click();
@@ -80,11 +71,11 @@ public class CardDeliveryTest {
 
     @Test
     void shouldNameError() {
-        setDaysPlusToday(5);
+        String planningDate = generateDate(5);
         $("[data-test-id=city] input").setValue("Москва");
         $("[data-test-id=date] input").sendKeys(Keys.CONTROL + "A");
         $("[data-test-id=date] input").sendKeys(BACK_SPACE);
-        $("[data-test-id=date] input").setValue(String.valueOf(setDateOfDelivery()));
+        $("[data-test-id=date] input").setValue(String.valueOf(planningDate));
         $("[data-test-id=name] input").setValue("John Dow");
         $("[data-test-id=phone] input").setValue("+79578664311");
         $("[data-test-id=agreement]").click();
@@ -94,11 +85,11 @@ public class CardDeliveryTest {
 
     @Test
     void shouldPhoneError() {
-        setDaysPlusToday(5);
+        String planningDate = generateDate(5);
         $("[data-test-id=city] input").setValue("Москва");
         $("[data-test-id=date] input").sendKeys(Keys.CONTROL + "A");
         $("[data-test-id=date] input").sendKeys(BACK_SPACE);
-        $("[data-test-id=date] input").setValue(String.valueOf(setDateOfDelivery()));
+        $("[data-test-id=date] input").setValue(String.valueOf(planningDate));
         $("[data-test-id=name] input").setValue("Салтыков-Щедрин Евгений");
         $("[data-test-id=phone] input").setValue("79578664311");
         $("[data-test-id=agreement]").click();
@@ -108,10 +99,10 @@ public class CardDeliveryTest {
 
     @Test
     void shouldErrorIfCityEmpty() {
-        setDaysPlusToday(5);
+        String planningDate = generateDate(5);
         $("[data-test-id=date] input").sendKeys(Keys.CONTROL + "A");
         $("[data-test-id=date] input").sendKeys(BACK_SPACE);
-        $("[data-test-id=date] input").setValue(String.valueOf(setDateOfDelivery()));
+        $("[data-test-id=date] input").setValue(String.valueOf(planningDate));
         $("[data-test-id=name] input").setValue("Салтыков-Щедрин Евгений");
         $("[data-test-id=phone] input").setValue("+79578664311");
         $("[data-test-id=agreement]").click();
@@ -133,11 +124,11 @@ public class CardDeliveryTest {
 
     @Test
     void shouldErrorIfNameEmpty() {
-        setDaysPlusToday(5);
+        String planningDate = generateDate(5);
         $("[data-test-id=city] input").setValue("Москва");
         $("[data-test-id=date] input").sendKeys(Keys.CONTROL + "A");
         $("[data-test-id=date] input").sendKeys(BACK_SPACE);
-        $("[data-test-id=date] input").setValue(String.valueOf(setDateOfDelivery()));
+        $("[data-test-id=date] input").setValue(String.valueOf(planningDate));
         $("[data-test-id=phone] input").setValue("+79578664311");
         $("[data-test-id=agreement]").click();
         $(".button").click();
@@ -146,11 +137,11 @@ public class CardDeliveryTest {
 
     @Test
     void shouldErrorIfPhoneEmpty() {
-        setDaysPlusToday(5);
+        String planningDate = generateDate(5);
         $("[data-test-id=city] input").setValue("Москва");
         $("[data-test-id=date] input").sendKeys(Keys.CONTROL + "A");
         $("[data-test-id=date] input").sendKeys(BACK_SPACE);
-        $("[data-test-id=date] input").setValue(String.valueOf(setDateOfDelivery()));
+        $("[data-test-id=date] input").setValue(String.valueOf(planningDate));
         $("[data-test-id=name] input").setValue("Салтыков-Щедрин Евгений");
         $("[data-test-id=agreement]").click();
         $(".button").click();
@@ -159,15 +150,44 @@ public class CardDeliveryTest {
 
     @Test
     void shouldErrorWithoutCheckbox() {
-        setDaysPlusToday(5);
+        String planningDate = generateDate(5);
         $("[data-test-id=city] input").setValue("Москва");
         $("[data-test-id=date] input").sendKeys(Keys.CONTROL + "A");
         $("[data-test-id=date] input").sendKeys(BACK_SPACE);
-        $("[data-test-id=date] input").setValue(String.valueOf(setDateOfDelivery()));
+        $("[data-test-id=date] input").setValue(String.valueOf(planningDate));
         $("[data-test-id=name] input").setValue("Салтыков-Щедрин Евгений");
         $("[data-test-id=phone] input").setValue("+79578664311");
         $(".button").click();
         $("[data-test-id='agreement'].input_invalid").shouldBe(visible);
+    }
+
+    @Test
+    void shouldChoseCityFromList() {
+        String planningDate = generateDate(5);
+        $("[data-test-id=city] input").setValue("Мо");
+        $$(".popup .menu-item__control").findBy(text("Москва")).click();
+        $("[data-test-id=date] input").sendKeys(Keys.CONTROL + "A");
+        $("[data-test-id=date] input").sendKeys(BACK_SPACE);
+        $("[data-test-id=date] input").setValue(String.valueOf(planningDate));
+        $("[data-test-id=name] input").setValue("Салтыков-Щедрин Евгений");
+        $("[data-test-id=phone] input").setValue("+79578664311");
+        $("[data-test-id=agreement]").click();
+        $(".button").click();
+        $("[data-test-id='notification']").shouldBe(visible, Duration.ofSeconds(15));
+    }
+
+    @Test
+    void shouldSubmitRequest2() {
+        String planningDate = generateDate(5);
+        $("[data-test-id=city] input").setValue("Москва");
+        $("[data-test-id=date] input").sendKeys(Keys.CONTROL + "A");
+        $("[data-test-id=date] input").sendKeys(BACK_SPACE);
+        $("[data-test-id=date] input").setValue(String.valueOf(planningDate));
+        $("[data-test-id=name] input").setValue("Салтыков-Щедрин Евгений");
+        $("[data-test-id=phone] input").setValue("+79578664311");
+        $("[data-test-id=agreement]").click();
+        $(".button").click();
+        $(".notification__content").shouldHave(Condition.text("Встреча успешно забронирована на " + planningDate), Duration.ofSeconds(15)).shouldBe(Condition.visible);
     }
 
     @AfterEach
